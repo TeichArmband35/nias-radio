@@ -4,8 +4,8 @@ const fs = require('fs');
 
 // Passwords and stuff
 const username = "source";
-const passwort = "0402PW11N1ASBR0AD";
-const port = 22620;
+const passwort = "admin123"; // Your broadcast password here
+const port = 3000; // Your broadcast port here
 const streamUrl =
     `icecast://${username}:${passwort}@uk2freenew.listen2myradio.com:${port}/stream`;
 
