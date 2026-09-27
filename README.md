@@ -29,3 +29,29 @@ A radio station that automatically reads out warnings from the BBK. As soon as a
 
 > Note: All music must be no copyright music or own a license to use a copyrighted song.
 > Notice: All pre-recorded messages are in german,  because the BBK is a german Federal Office.
+
+## FAQ
+### What does "NIAS" stand for?
+NIAS is the short term for *Notfall- Informations und Alarmsystem*, which is german and stands for *Emergency Information and Alert System*. Therefore, NIAS can be called *EIAS* in english.
+
+### Whats the BBK?
+The BBK is a german Federal Office, BBK stands for *Bundesamt für Bevölkerungsschutz und Katastrophenhilfe*. This translates to *Federal Office for Civil Protection and Disaster Response*.
+
+### Why does NIAS exist?
+NIAS is the answer to the disaster of the *Ahrtaal-Flut*, which was a catastrophic flood event in 2021. One of the reasons of the catastrophic and deadly outcome was, that the people were not able to be warned by civil defense sirens.
+In addition, as the Disaster was unfolding the people were not able to get enough information via Radio. NIAS and NIAS Radio was invented to warn and inform the people about upcoming disasters.
+Due to nobody knowing the siren signals in germany, NIAS doesnt use siren signals. NIAS instead reads out the issued warning and the recommendations for actions.
+
+### How can I add more pre-recorded messages?
+Either use [NIAS](https://github.com/TeichArmband35/nias) by itself (using custom annoucement) or use another TTS tool. When you have your `.wav` file, paste it in `NIAS-Radio/PreRecorededMsg/`. 
+After that, add it in the array `premsg` in the format of `PreRecorededMsg/yourfilename.wav`. That was all.
+
+> Note: If you have 9 pre-recorded messages in total you must have 8 RAM slots in the JSON object RAMprerec.
+> This is to prevent that pre-recorded messages get played twice or dont get played at all
+
+### How can I add more music?
+Find a no copyrighted song (or license a copyrighted song). When you have your `.wav` file (song file), paste it in `NIAS-Radio/Music/`. 
+After that, add it in the array `music` in the format of `Music/yourfilename.wav`. That was all.
+
+> Note: If you have 9 songs in total you must have 8 RAM slots in the JSON object RAMmusic.
+> This is to prevent that songs get played twice or dont get played at all
