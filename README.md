@@ -55,3 +55,18 @@ After that, add it in the array `music` in the format of `Music/yourfilename.wav
 
 > Note: If you have 9 songs in total you must have 8 RAM slots in the JSON object RAMmusic.
 > This is to prevent that songs get played twice or dont get played at all
+
+### Is there already a free NIAS Radio online?
+**YES!**, but only for the following cities, municipalities and/or districts:
+- District: Würzburg, municipality: Veitshöchheim
+
+> Note: More cities, municipalities and/or districts will come, when I run my own server.
+> In addition, I will run a homepage for NIAS and will use my own Radio-Station-Server instead of using `listen2myradio.com`.
+> Everything will be free and accesable for everyone.
+
+### Important notice
+**You are allowed to use NIAS for private use and / or NON COMMERCIAL use. Using NIAS for commercial use is STRICTLY PROHIBETED. NIAS IS MADE TO HELP PEOPLE GATHER INFORMATION TO WARNINGS AND TO HELP THE BBK; NIAS IS MADE FOR CIVIL DEFENSE USE.**
+**NIAS Radio is a private, independent information service and has no connection with the Federal Office for Civil Protection and Disaster Response (BBK) or any other government warning and disaster management authorities.
+The warnings and information provided via NIAS are intended solely as additional assistance and do not replace official warnings or instructions from authorities and emergency services.
+We cannot guarantee that warnings will be transmitted in full, accurately or at all times. Technical faults, outages or delays may occur.
+In an emergency, official warnings and instructions from the relevant authorities take precedence.**
