@@ -25,6 +25,7 @@ A radio station that automatically reads out warnings from the BBK. As soon as a
 6. Add pre-recorded messages (optional, you can use the pre-recorded messages that come with NIAS-Radio)
 7. Start the radio server (e.g. start your `listen2myradio` server)
 8. Run `node index.js` inside of `NIAS-Radio`
+
 **DONEEEE!**
 
 > Note: All music must be copyright-free or you must own a license to use a copyrighted song.
