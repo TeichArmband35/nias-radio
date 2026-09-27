@@ -40,7 +40,7 @@ The BBK is a German federal office, BBK stands for *Bundesamt für Bevölkerungs
 
 ### Why does NIAS exist?
 NIAS is the answer to the disaster of the *Ahrtal-Flut*, which was a catastrophic flood event in 2021. One of the reasons of the catastrophic and deadly outcome was that the people could not be warned by civil defense sirens.
-In addition, as the Disaster was unfolding, people were unable to receive sufficient information via radio. NIAS and NIAS-Radio was created to warn and inform people about upcoming disasters.
+In addition, as the Disaster was unfolding, people were unable to receive sufficient information via radio. NIAS and NIAS-Radio were created to warn and inform people about upcoming disasters.
 Since most people in Germany do not know the siren signals, NIAS does not use siren signals. Instead, NIAS reads out the issued warning along with the recommended actions.
 
 ### How can I add more pre-recorded messages?
@@ -67,8 +67,8 @@ After that, add it to the array `music` in the format `Music/yourfilename.wav`. 
 
 ### Important notice
 **You are allowed to use NIAS for private and/or non-commercial use. Using NIAS for commercial purposes is strictly prohibited. NIAS is made to help people access information about warnings and to support the BBK; NIAS is made for civil defense use.
-NIAS-Radio is a private, independent information service and has no connection with the Federal Office for Civil Protection and Disaster Response (BBK) or any other government warning and disaster management authority.
-The warnings and information provided via NIAS are intended solely as additional assistance and do not replace official warnings or instructions from authorities and emergency services.
+NIAS-Radio and NIAS are a private, independent information service and have no connection with the Federal Office for Civil Protection and Disaster Response (BBK) or any other government warning and disaster management authority.
+The warnings and information provided via NIAS and NIAS-Radio are intended solely as additional assistance and do not replace official warnings or instructions from authorities and emergency services.
 We cannot guarantee that warnings will be transmitted in full, accurately or at all times. Technical faults, outages or delays may occur. In an emergency, official warnings and instructions from the relevant authorities always take precedence.**
 
 ![NIAS Banner big](images/NIASbanner_big.png)
