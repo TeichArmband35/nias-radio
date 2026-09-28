@@ -57,6 +57,13 @@ After that, add it to the array `music` in the format `Music/yourfilename.wav`. 
 > Note: If you have 9 songs in total you must have 8 RAM slots in the JSON object RAMmusic.
 > This prevents  songs from being played twice or not at all.
 
+### How can I combine NIAS-Radio with NIAS?
+To combine NIAS-Radio with [NIAS](https://github.com/TeichArmband35/nias) download NIAS-Radio (e.g. as an `.zip`).
+Place the `NIAS-Radio` folder in `~/server` (folder where NIAS is located). In `~/server/server.js`, change the variable `useNIASradio` to `true`.
+Congrats, you have now combined NIAS-Radio with [NIAS](https://github.com/TeichArmband35/nias)!
+
+> Note: Light-NIAS will be coming out soon (light version of NIAS; only made for NIAS-Radio)
+
 ### Is there already a free NIAS Radio online?
 **YES!**, but only for the following cities, municipalities and/or districts:
 - District: Würzburg, municipality: Veitshöchheim ([NIAS1](https://niasvhh.radiostream321.com/); If NIAS1 doesnt work, [NIAS2](https://niasvhh.radiostream123.com/); If NIAS2 doesnt work, [NIAS3](https://niasvhh.radio12345.com/); These do not work on firefox for some reason; The radio is not always on, refresh site to check)
