@@ -59,7 +59,7 @@ After that, add it to the array `music` in the format `Music/yourfilename.wav`. 
 
 ### Is there already a free NIAS Radio online?
 **YES!**, but only for the following cities, municipalities and/or districts:
-- District: Würzburg, municipality: Veitshöchheim ([NIAS1](https://niasvhh.radiostream321.com/); If NIAS1 doesnt work, [NIAS2](https://niasvhh.radiostream123.com/); These do not work on firefox for some reason; The radio is not always on, refresh site to check)
+- District: Würzburg, municipality: Veitshöchheim ([NIAS1](https://niasvhh.radiostream321.com/); If NIAS1 doesnt work, [NIAS2](https://niasvhh.radiostream123.com/); If NIAS2 doesnt work, [NIAS3](https://niasvhh.radio12345.com/); These do not work on firefox for some reason; The radio is not always on, refresh site to check)
 
 > Note: More cities, municipalities and/or districts will be added once I run my own server.
 > In addition, I will set up a homepage for NIAS and use my own radio station server instead of `listen2myradio.com`.
