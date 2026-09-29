@@ -62,7 +62,7 @@ To combine NIAS-Radio with [NIAS](https://github.com/TeichArmband35/nias) downlo
 Place the `NIAS-Radio` folder in `~/server` (folder where NIAS is located). In `~/server/server.js`, change the variable `useNIASradio` to `true`.
 Congrats, you have now combined NIAS-Radio with [NIAS](https://github.com/TeichArmband35/nias)!
 
-> Note: Light-NIAS will be coming out soon (light version of NIAS; only made for NIAS-Radio)
+> Note: NIAS-light will be coming out soon (light version of NIAS; only made for NIAS-Radio)
 
 ### Is there already a free NIAS Radio online?
 **YES!**, but only for the following cities, municipalities and/or districts:
