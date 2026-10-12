@@ -1,15 +1,20 @@
 // Requirements
 const { spawn } = require("child_process");
 const fs = require('fs');
+const path = require("path");
 
 // Passwords and stuff
 const username = "source";
-const passwort = "admin123"; // Your broadcast password here
-const port = 3000; // Your broadcast port here
+const passwort = "admin123";
+const port = 3000;
 const streamUrl =
     `icecast://${username}:${passwort}@uk2freenew.listen2myradio.com:${port}/stream`;
 
 // Making logs prettier
+
+var errors = 0;
+var warnings = 0;
+
 const RED = "\x1b[31m"; // red
 const YELLOW = "\u001b[38;2;253;182;0m" // yellow
 const RESET = "\x1b[0m"; // reset of color
@@ -22,25 +27,90 @@ const Debug = RESET + " DEBUG]:";
 async function log(msg, type, fatal, name) {
     var time = new Date().toISOString();
     if (type === 1) {
+
+        if (errors >= 10 && !fatal) {
+            await log(`Errors exceed one minute-limit,
+         errors === ${errors}, 
+         calling errcrash`, 4, false, "log");
+             errcrash()
+            return;
+        } else {
+            errors++;
+            await log(`Errors dont exceed one minute-limit,
+         errors === ${errors}`, 4, false, "log");
+            writeToFile (
+                `${time} ${"[" + name + ErrorWarnung} ${msg}`
+            )
+        }
+
         console.log(`\x1b[35m${time}\x1b[0m ${ RED + "[" + name + ErrorWarnung} ${msg} ${RESET}`);
         if (fatal) {
             console.error(msg);
+            writeToFile (
+                `${time} ${"[" + name + "FATAL ERROR]:"} ${msg}`
+            )
             process.exit(1);
         }
     }
     if (type === 2) {
-        console.log(`\x1b[35m${time}\x1b[0m ${YELLOW + "[" + name + WarnungWarnung} ${msg} ${RESET}`);
+        if (warnings >= 100) {
+            await log(`Warnings exceed one minute-limit,
+         warnings === ${warnings}, 
+         calling warncrash`, 4, false, "log");
+            warncrash();
+        } else {
+            warnings++;
+            await log(`Warnings dont exceed one minute-limit,
+         warnings === ${warnings}`, 4, false, "log");
+            console.log(`\x1b[35m${time}\x1b[0m ${YELLOW + "[" + name + WarnungWarnung} ${msg} ${RESET}`);
+            writeToFile(
+                `${time} ${"[" + name + WarnungWarnung} ${msg}`
+            )
+        }
     }
     if (type === 3) {
         console.log(`\x1b[35m${time}\x1b[0m ${RESET + "[" + name + Info} ${msg} ${RESET}`);
+        writeToFile(
+            `${time} ${"[" + name + Info} ${msg}`
+        )
     }
     if (type === 4) {
         console.log(`\x1b[35m${time}\x1b[0m ${RESET + "[" + name + Debug} ${msg} ${RESET}`);
+        writeToFile(
+            `${time} ${"[" + name + Debug} ${msg}`
+        )
+    }
+}
+
+// Logging in txt files
+const logDir = path.join(__dirname, "logs");
+fs.mkdirSync(logDir, { recursive: true });
+
+// removing color codes
+function stripAnsi(str) {
+    return String(str).replace(/\x1b\[[0-9;]*m/g, "");
+}
+
+function writeToFile(line) {
+    try {
+        const day = new Date().toISOString().slice(0, 10); // z.B. 2026-10-07
+        const file = path.join(logDir, `radio-${day}.txt`);
+        fs.appendFileSync(file, stripAnsi(line) + "\n");
+    } catch (e) {
+        console.error("Log-Datei nicht beschreibbar:", e);
     }
 }
 
 // RAM
 const RAMprerec = {
+    r15: [],
+    r14: [],
+    r13: [],
+    r12: [],
+    r11: [],
+    r10: [],
+    r9: [],
+    r8: [],
     r7: [],
     r6: [],
     r5: [],
@@ -51,6 +121,20 @@ const RAMprerec = {
 };
 
 const RAMmusic = {
+    r21: [],
+    r20: [],
+    r19: [],
+    r18: [],
+    r17: [],
+    r16: [],
+    r15: [],
+    r14: [],
+    r13: [],
+    r12: [],
+    r11: [],
+    r10: [],
+    r9: [],
+    r8: [],
     r7: [],
     r6: [],
     r5: [],
@@ -63,7 +147,7 @@ const RAMmusic = {
 // Pushing in RAM
 async function RAMprerecPush(file) {
     try {
-        for (let i = 7; i >= 2; i--) {
+        for (let i = Object.keys(RAMprerec).length; i >= 2; i--) {
             RAMprerec[`r${i}`] = RAMprerec[`r${i - 1}`];
             await log(`Push: ${RAMprerec[`r${i}`]}`, 4, false, "RAMprerecPush");
         }
@@ -76,7 +160,7 @@ async function RAMprerecPush(file) {
 
 async function RAMmusicPush(file) {
     try {
-        for (let i = 7; i >= 2; i--) {
+        for (let i =  Object.keys(RAMmusic).length; i >= 2; i--) {
             RAMmusic[`r${i}`] = RAMmusic[`r${i - 1}`];
             await log(`Push: ${RAMmusic[`r${i}`]}`, 4, false, "RAMmusicPush");
         }
@@ -90,7 +174,7 @@ async function RAMmusicPush(file) {
 // Checking RAM
 async function RAMmusicCheck(file) {
     try {
-        for (var i = 7; i >= 1; i--) {
+        for (var i = Object.keys(RAMmusic).length; i >= 1; i--) {
             if (RAMmusic[`r${i}`] === file) {
                 return true;
             }
@@ -103,7 +187,7 @@ async function RAMmusicCheck(file) {
 
 async function RAMprerecCheck(file) {
     try {
-        for (var i = 7; i >= 1; i--) {
+        for (var i = Object.keys(RAMprerec).length; i >= 1; i--) {
             if (RAMprerec[`r${i}`] === file) {
                 return true;
             }
@@ -118,7 +202,7 @@ async function RAMprerecCheck(file) {
 
 async function RAMprerecCount() {
     var count = 0;
-    for (var i = 7; i >= 1; i--) {
+    for (var i = Object.keys(RAMprerec).length; i >= 1; i--) {
         if (RAMprerec[`r${i}`] !== null) {
             count++;
         }
@@ -128,7 +212,7 @@ async function RAMprerecCount() {
 
 async function RAMmusicCount() {
     var count = 0;
-    for (var i = 7; i >= 1; i--) {
+    for (var i = Object.keys(RAMmusic).length; i >= 1; i--) {
         if (RAMmusic[`r${i}`] !== null) {
             count++;
         }
@@ -136,11 +220,37 @@ async function RAMmusicCount() {
     return count;
 }
 
+// Too many warnings = crash functions
+
+function warnreset() {
+    warnings = 0;
+    log(`warnings = ${warnings}`, 4, false, "warnreset");
+}
+
+async function warncrash(){
+    await log(`Too many warnings in one minute  
+    warnings === ${warnings}`, 1, true, "warncrash");
+}
+
+// Too many errors = crash functions
+
+function errreset() {
+    errors = 0;
+    log(`errors = ${errors}`, 4, false, "errreset");
+}
+
+async function errcrash(){
+    await log(`Too many errors in one minute  
+    warnings === ${errors}`, 1, true, "errcrash");
+}
+
 // Setting intervals
 var timeoutIntervalWarnings = [];
 var timeoutIntervalPrerec = [];
 
 setInterval(() => coordinateFFmpeg(), 30000);
+setInterval(() => warnreset(), 60000)
+setInterval(() => errreset(), 60000)
 
 function startWarningInterval() {
     clearInterval(timeoutIntervalWarnings);
@@ -164,6 +274,14 @@ const premsg = [
     "PreRecorededMsg/feuerwehrNotrufSIM.wav",
     "PreRecorededMsg/notrufNummern.wav",
     "PreRecorededMsg/wasserVorrat.wav",
+    "PreRecorededMsg/quellen.wav",
+    "PreRecorededMsg/offizielleMeldungen.wav",
+    "PreRecorededMsg/chemieUnfall.wav",
+    "PreRecorededMsg/hausMedis.wav",
+    "PreRecorededMsg/hitze.wav",
+    "PreRecorededMsg/hochwasser.wav",
+    "PreRecorededMsg/kohlenstoffMonoxid.wav",
+    "PreRecorededMsg/notfallGepäck.wav",
 ]
 
 // Random File Choosing
@@ -242,19 +360,19 @@ async function checkFile() {
 }
 
 async function coordinateFFmpeg() {
-    if (await RAMmusicCount() >= 7 ) {
+    if (await RAMmusicCount() >= Object.keys(RAMmusic).length ) {
         await log(`Clearing RAMmusic, RAMmusic.length: ${Object.keys(RAMmusic).length}`, 2, false, "coordinateFFmpeg()");
-        for (var i = 7; i >= 1; i--) {
+        for (var i = Object.keys(RAMmusic).length; i >= 1; i--) {
             await log(`RAMmusic: ${RAMmusic[`r${i}`]}`, 4, false, "coordinateFFmpeg()");
             RAMmusic[`r${i}`] = null;
             await log(`RAMmusic: ${RAMmusic[`r${i}`]}`, 4, false, "coordinateFFmpeg()");
         }
     }
 
-    if (await RAMprerecCount() >= 7 ) {
-        await log(`Clearing RAMprerecCount, RAMprerecCount.length: ${Object.keys(RAMprerecCount).length}`, 2, false, "coordinateFFmpeg()");
-        for (var i = 7; i >= 1; i--) {
-            await log(`RAMmusic: ${RAMprerec[`r${i}`]}`, 4, false, "coordinateFFmpeg()");
+    if (await RAMprerecCount() >= Object.keys(RAMprerec).length ) {
+        await log(`Clearing RAMprerecCount, RAMprerecCount.length: ${Object.keys(RAMprerec).length}`, 2, false, "coordinateFFmpeg()");
+        for (var i = Object.keys(RAMprerec).length; i >= 1; i--) {
+            await log(`RAMmusic: ${RAMprerec[`r${i}`]}`, 4, false, "coordinateFF mpeg()");
             RAMprerec[`r${i}`] = null;
             await log(`RAMmusic: ${RAMprerec[`r${i}`]}`, 4, false, "coordinateFFmpeg()");
         }
@@ -305,6 +423,20 @@ const music = [
     "Music/closingtime.mp3",
     "Music/easterncredits.mp3",
     "Music/miamichai.mp3",
+    "Music/19fifty.mp3",
+    "Music/areyouhuman.mp3",
+    "Music/binarychill.mp3",
+    "Music/copenhagen.mp3",
+    "Music/culturo.mp3",
+    "Music/firstencounter.mp3",
+    "Music/goldenshuffel.mp3",
+    "Music/helloworld.mp3",
+    "Music/onthecanopy.mp3",
+    "Music/sambabug.mp3",
+    "Music/singleartifact.mp3",
+    "Music/skyline.mp3",
+    "Music/trickleondown.mp3",
+    "Music/twilightarcade.mp3",
 ]
 
 // Play ffmpeg
@@ -332,6 +464,7 @@ async function playPlaylist(warning) {
 
 // Start Stream
 
+let totalSize = null;
 var ffmpegStream = null;
 var currentSource = null;
 
@@ -352,6 +485,16 @@ function startStream() {
     ffmpegStream.stderr.on("data", data =>
         log(`${data}`, 4, false, "ffmpeg-stream")
     );
+
+    ffmpegStream.stdin.on("error", err => {
+        log(`stream stdin error: ${err.code}`, 1, true, "ffmpeg-stream");
+    });
+
+    ffmpegStream.stderr.on('data', (data) => {   // <- der ffmpeg-stream Prozess, NICHT der source
+        const m = data.toString().match(/size=\s*(\d+(?:\.\d+)?)\s*([kKmMgG]?i?B)/);
+        if (m) totalSize = m[1] + m[2];   // z. B. "1125KiB"
+        watchDog(totalSize);
+    });
 
     ffmpegStream.on("close", code => {
         log(`FFmpeg stream closed: ${code}`, 1, false, "ffmpeg-stream");
@@ -375,64 +518,63 @@ var lastmusic = null;
 
 function pipeAudio(file, loop = false) {
     if (currentSource) {
-        currentSource.kill("SIGKILL");
+        const old = currentSource;
         currentSource = null;
+        if (ffmpegStream && ffmpegStream.stdin) {
+            old.stdout.unpipe(ffmpegStream.stdin);
+        }
+        old.kill("SIGKILL");
     }
+
+    if (!ffmpegStream || !ffmpegStream.stdin || ffmpegStream.stdin.destroyed) {
+        log("FFmpeg stream stdin is not available", 1, true, "pipeAudio()");
+        return;
+    }
+
     const args = [];
     if (loop) args.push("-stream_loop", "-1");
     args.push("-i", file, "-vn", "-f", "mp3", "-");
 
-    currentSource = spawn("ffmpeg", args);
+    const source = spawn("ffmpeg", args);
+    currentSource = source;
 
-    if (!ffmpegStream || !ffmpegStream.stdin || ffmpegStream.stdin.destroyed) {
-        log("FFmpeg stream stdin is not available", 1, false, "pipeAudio()");
-        currentSource.kill("SIGKILL");
-        currentSource = null;
-        return;
-    }
+    source.stdout.on("error", err => {
+        log(`source stdout error: ${err.code} \n err: ${err}`, 1, true, "ffmpeg-source");
+    });
 
-    currentSource.stdout.pipe(ffmpegStream.stdin, { end: false }); // Stream audio to pipe
+    source.stdout.pipe(ffmpegStream.stdin, { end: false });
 
-    currentSource.stderr.on("data", data =>
-        log(`${data}`, 4, false, "ffmpeg-source")
-    );
+    source.stderr.on("data", (data) => {
+        log(`${data}`, 4, false, "ffmpeg-source");
+    });
 
-    currentSource.on("close", async code => {
+
+
+    source.on("close", async (code, err) => {
         log(`Source-Process end: ${code}`, 4, false, "ffmpeg-source");
-        currentSource = null;
+        if (err) {
+            log(`ffmpeg stream error ${err}`, 1, false, "ffmpeg-source");
+        }
 
-        if (code === null) {
-            log("source killed SIGKILL, no restart", 2, false, "ffmpeg-source");
+        if (currentSource !== source) {
+            log("stale source closed, ignoring", 2, false, "ffmpeg-source");
             return;
         }
+        currentSource = null;
 
         runningFFmpeg = false;
         chooseFileDone = false;
 
-        var i = Math.floor(Math.random()*music.length);
-        if (lastmusic) {
-
-            while (music[i] === lastmusic) {
-                log(`old music (${lastmusic}) === new music (${music[i]}), retrying`, 2, false, "pipeAudio");
-                i = Math.floor(Math.random()*music.length);
-            }
-
-            while (await RAMmusicCheck(music[i])) {
-                log(`new music (${music[i]}) is in RAM, retrying`, 2, false, "pipeAudio");
-                i = Math.floor(Math.random()*music.length);
-            }
-
-            log(`old music (${lastmusic}) !== new music (${music[i]}), retrying complete`, 2, false, "pipeAudio");
-            pipeAudio(music[i], false); // stream music if warning finished
-        } else {
-            pipeAudio(music[i], false); // stream music if warning finished
+        var i = Math.floor(Math.random() * music.length);
+        while (music[i] === lastmusic || await RAMmusicCheck(music[i])) {
+            i = Math.floor(Math.random() * music.length);
+            await log(`new music ${music[i]} === lastmusic ${lastmusic} or in RAM, retrying`, 2, false, "ffmpeg-source");
         }
 
-        log(`Playing Music: ${music[i]}`, 2, false, "pipeAudio");
         lastmusic = music[i];
         RAMmusicPush(lastmusic);
-        log(`lastmusic: ${lastmusic}`, 4, false, "pipeAudio");
-
+        log(`Playing Music: ${music[i]}`, 2, false, "pipeAudio");
+        pipeAudio(music[i], false);
     });
     log(`Piping: ${file}`, 3, false, "pipeAudio()");
 }
@@ -478,4 +620,37 @@ function startRadio() {
     log(`Playing Music: ${music[i]}`, 2, false, "pipeAudio");
 }
 
+// Watchdog, if internet cut kill programm with err fatal
+
+var maxSameBytes = 200;
+var numSameBytes = 0;
+var lastsize;
+
+function watchDog(size) {
+    numSameBytes++;
+
+    log(`size watchdog: ${size}`)
+
+    if (size !== lastsize) {
+        numSameBytes = 0;
+        log(`watchDog status: No faulty Bytes detected; Faulty Bytes: ${numSameBytes}`, 4, false, "watchDog");
+        lastsize = size;
+        return;
+    }
+
+    log(`watchDog status: Faulty Bytes detected; Faulty Bytes: ${numSameBytes}; checking if crash should happen;`, 4, false, "watchDog");
+
+    if (numSameBytes >= maxSameBytes) {
+        log(`Maximum of allowed same bytes reached! Maximum: ${maxSameBytes}; This might bee a Network or Server error; Crashing NIAS-Radio; Faulty Bytes: ${numSameBytes}`,
+            1, true, "watchDog");
+    } else {
+        log(`watchDog status: Faulty Bytes detected; Faulty Bytes: ${numSameBytes}; Faulty Bytes num too low for crash`, 3, false, "watchDog");
+    }
+
+    lastsize = size;
+
+}
+
+writeToFile ("--- NEW PROCESS STARTED ---");
+writeToFile ("--- CALLING startRadio ---")
 startRadio();
