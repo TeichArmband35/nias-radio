@@ -1,0 +1,4 @@
+In this folder all logs of NIAS will be saved.
+If an error occurs you can look here and hopefully find the needed Logs.
+NIAS-Radio wont override Logs, NIAS-Radio will continue writing in the same file.
+This will be seperated by: "--- NEW PROCESS STARTED --- \n --- CALLING startRadio ---"
